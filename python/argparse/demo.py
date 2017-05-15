@@ -145,7 +145,33 @@ def subparser(args):
     print 'parsed_args.global_option = %s(\'%s\')' % (type(parsed_args.global_option).__name__, parsed_args.global_option)
     print '='*80
 
+def inherit(args):
+    print '='*80
+    git_parser = argparse.ArgumentParser(prog='git', description='python demo for argpase - subparsers usage, inherit args')
 
+    #configure the root parser object to process subcommands
+    git_subparsers = git_parser.add_subparsers()
+
+    #create a parent parser to inherit arguments from
+    parent = argparse.ArgumentParser(add_help=False)
+    parent.add_argument('-d', '--debug', action='store_true', default=False, help='enable debug logging')
+
+    #create a subparser to handle arguments when 'git add' is called, inherit the --debug flag from parent parser
+    git_file_add_parser = git_subparsers.add_parser('add', description='Add file contents to the index', parents=[parent])
+    git_file_add_parser.add_argument('filename', help='filename to add to index')
+
+    git_parser.print_help()
+
+    print '='*80
+    git_file_add_parser.print_help()
+    args = ['add', 'demo.py', '--debug']
+    print "Example: git %s\n" % ' '.join(args)
+    parsed_args = git_parser.parse_args(args)
+
+    print 'parsed_args.filename = %s(\'%s\')' % (type(parsed_args.filename).__name__, parsed_args.filename)
+    print 'parsed_args.debug = %s(\'%s\')' % (type(parsed_args.debug).__name__, parsed_args.debug)
+
+    print '='*80
 
 def all(args):
     for f in _all_functions():
