@@ -1,0 +1,25 @@
+task config1 {
+  println 'Config block 1'
+}
+
+task config2 {
+  println 'Config block 2'
+  doLast{
+    println 'Execution block 1'
+  }
+}
+
+task config3(dependsOn: 'config2') {
+  println 'Config clock 3'
+  doLast{
+    println 'Execution block 2'
+  }
+}
+
+task config4 {
+  doLast{
+    println 'Execution block 3'
+  }
+}
+
+config4.dependsOn config3
